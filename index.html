@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>کتابخانه شخصی</title>
+<meta name="theme-color" content="#06152b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="کتابخانه">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%2306152b' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' font-size='64' text-anchor='middle' fill='%2354c8ff'%3E▤%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/shelf.css">
+<link rel="stylesheet" href="css/room.css">
+<link rel="stylesheet" href="css/museum.css">
+</head>
+<body>
+
+<div id="offlineBanner" class="pwa-banner offline" hidden role="status" aria-live="polite">
+  <span>⚠️ آفلاین هستی — از حافظه محلی اجرا می‌شود</span>
+</div>
+
+<div id="updateBanner" class="pwa-banner update" hidden role="status" aria-live="polite">
+  <span>✨ نسخه جدید آماده است</span>
+  <button data-reload type="button">به‌روزرسانی</button>
+  <button data-dismiss type="button" class="ghost">بعداً</button>
+</div>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <button class="hamburger" id="sidebarToggle" type="button" aria-label="باز کردن منو">☰</button>
+      <div class="logo" aria-hidden="true">▤</div>
+      <div>
+        <h1>کتابخانه شخصی</h1>
+        <div class="subtitle">بخوان، یاد بگیر، رشد کن</div>
+      </div>
+    </div>
+    <div class="quote">«هر کتاب، <b>یک قدم به سوی نسخه بهتر خودت</b> است.»<br><span class="muted">مدیریت کتاب‌ها و مسیر مطالعه</span></div>
+    <div class="actions">
+      <button class="btn hide-sm" id="cmdkBtn" type="button" title="جست‌وجو (Ctrl+K)">🔍</button>
+      <button class="btn primary" id="add" type="button">＋ افزودن کتاب</button>
+      <input type="file" id="file" accept=".json" hidden>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar" aria-label="منوی اصلی">
+
+      <div class="sidebar-head">
+        <span class="sidebar-brand">
+          <span class="sidebar-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </span>
+          <span>کتابخانه</span>
+        </span>
+        <button class="sidebar-close" id="sidebarClose" type="button" aria-label="بستن">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- آواتار کاربر -->
+      <div class="sidebar-avatar-block" id="sidebarAvatarBlock">
+        <div class="sidebar-avatar" id="sidebarAvatar">
+          <span id="sidebarAvatarLetter">ک</span>
+        </div>
+        <div class="sidebar-user-info">
+          <b id="sidebarUserName">کتاب‌خوان</b>
+          <small id="sidebarUserStat">۰ کتاب</small>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button data-tab-target="dash" class="active">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </span>
+          <span>داشبورد</span>
+        </button>
+        <button data-tab-target="books">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              <path d="M9 7h8"/>
+              <path d="M9 11h6"/>
+            </svg>
+          </span>
+          <span>قفسه کتاب</span>
+        </button>
+        <button data-tab-target="reading">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </span>
+          <span>مطالعه</span>
+        </button>
+        <button data-tab-target="quotes">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 17h3l2-4V7H5v6h3"/>
+              <path d="M14 17h3l2-4V7h-6v6h3"/>
+            </svg>
+          </span>
+          <span>نقل‌قول‌ها</span>
+        </button>
+        <button data-tab-target="stats">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </span>
+          <span>آمار</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <nav class="sidebar-nav">
+        <button data-tab-target="settings">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </span>
+          <span>تنظیمات</span>
+        </button>
+        <button id="export" type="button">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </span>
+          <span>پشتیبان‌گیری</span>
+        </button>
+        <button id="import" type="button">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </span>
+          <span>بازیابی</span>
+        </button>
+        <button id="installBtn" type="button" hidden>
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </span>
+          <span>نصب برنامه</span>
+        </button>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="app-main">
+
+      <!-- ============ TAB: DASHBOARD ============ -->
+      <section class="dash-hero" id="dashHero" data-tab="dash" aria-label="کتاب در حال خواندن"></section>
+      <section class="daily-quote" id="dailyQuoteCard" data-tab="dash" hidden aria-label="نقل‌قول امروز"></section>
+
+      <section class="kpis" data-tab="dash" aria-label="شاخص‌های کلیدی">
+        <div class="kpi" style="--accent:var(--blue)"><label>📚 کل کتاب‌ها</label><div class="num" id="total">۰</div><small class="muted" id="totalpages">۰ صفحه</small></div>
+        <div class="kpi kpi-spark" style="--accent:var(--teal)"><label>📅 این هفته</label><div class="num" id="weekTotalKpi">۰</div><small class="muted">دقیقه مطالعه</small><div class="spark-wrap" id="sparkMinutes"></div></div>
+        <div class="kpi" style="--accent:var(--green)"><label>✓ خوانده شده</label><div class="num" id="read">۰</div><small class="muted" id="readpct">۰٪ از کل</small></div>
+        <div class="kpi" style="--accent:var(--yellow)"><label>⌛ درحال خواندن</label><div class="num" id="active">۰</div><small class="muted">فعال</small></div>
+        <div class="kpi" style="--accent:var(--orange)"><label>◐ نیمه‌کاره</label><div class="num" id="half">۰</div><small class="muted">در جریان</small></div>
+        <div class="kpi" style="--accent:var(--purple)"><label>☷ صف مطالعه</label><div class="num" id="queue">۰</div><small class="muted">بعدی‌ها</small></div>
+        <div class="kpi" style="--accent:var(--red)"><label>○ خوانده نشده</label><div class="num" id="unread">۰</div><small class="muted" id="unreadpct">۰٪ از کل</small></div>
+        <div class="kpi" style="--accent:var(--teal)"><label>★ میانگین امتیاز</label><div class="num" id="rating">—</div><small class="muted" id="ratedcount">۰ امتیازدار</small></div>
+      </section>
+
+      <section class="charts" data-tab="dash">
+        <div class="panel"><div class="head"><h2>وضعیت کتاب‌ها</h2></div><canvas id="statusChart" role="img" aria-label="نمودار وضعیت"></canvas><div class="legend" id="statusLegend"></div></div>
+        <div class="panel"><div class="head"><h2>موضوعات</h2></div><canvas id="subjectChart" role="img" aria-label="نمودار موضوعات"></canvas><div class="legend" id="subjectLegend"></div></div>
+        <div class="panel"><div class="head"><h2>توزیع امتیاز</h2></div><canvas id="scoreChart" role="img" aria-label="نمودار امتیاز"></canvas><div class="legend" id="scoreLegend"></div></div>
+        <div class="panel"><div class="head"><h2>رادار علایق</h2></div><canvas id="radarChart" role="img" aria-label="نمودار رادار موضوعات"></canvas><div class="legend" id="radarLegend"></div></div>
+      </section>
+
+      <section class="panel" data-tab="dash" id="tasksPanel" style="margin-top:15px">
+        <div class="head"><h2>یادآوری‌های امروز</h2><span style="color:var(--yellow)" aria-hidden="true">💡</span></div>
+        <ul class="stats">
+          <li><input type="checkbox" id="task1" data-task="task1"><label for="task1">امروز ۳۰ دقیقه مطالعه کن</label></li>
+          <li><input type="checkbox" id="task2" data-task="task2"><label for="task2">یادداشت کوتاه کتاب فعلی را ثبت کن</label></li>
+          <li><input type="checkbox" id="task3" data-task="task3"><label for="task3">برای هفته آینده یک کتاب انتخاب کن</label></li>
+        </ul>
+      </section>
+
+      <!-- ============ TAB: BOOKS ============ -->
+      <section class="panel" data-tab="books">
+        <div class="head"><h2>کتابخانه من</h2><span class="muted" id="count">۰ کتاب</span></div>
+        <div class="tools">
+          <div class="search-wrap">
+            <input id="search" type="search" placeholder="جست‌وجو در عنوان، نویسنده، دلیل یا یادداشت…" autocomplete="off" aria-label="جست‌وجو">
+            <span class="sh">/</span>
+          </div>
+          <div class="books-view-toggle" role="group" aria-label="نوع نمایش">
+            <button type="button" data-view="shelf" aria-label="قفسه" title="قفسه کتابخانه">📚</button>
+            <button type="button" data-view="grid" aria-label="کارت" title="کارت">▦</button>
+            <button type="button" data-view="museum" aria-label="موزه" title="موزه کتاب‌های خوانده‌شده">🏛</button>
+            <button type="button" data-view="list" aria-label="فهرست" title="فهرست">▤</button>
+          </div>
+        </div>
+        <div class="chips" id="statusChips" role="tablist" aria-label="فیلتر وضعیت"></div>
+        <div class="tools">
+          <select id="filterSubject" aria-label="فیلتر موضوع"><option value="">همه موضوعات</option></select>
+          <select id="filterScore" aria-label="فیلتر امتیاز"><option value="">همه امتیازها</option></select>
+          <select id="filterAccess" aria-label="فیلتر دسترسی"><option value="">همه دسترسی‌ها</option></select>
+          <select id="filterFav" aria-label="فیلتر علاقه‌مندی"><option value="">همه کتاب‌ها</option><option value="fav">⭐ فقط علاقه‌مندی‌ها</option></select>
+        </div>
+        <div id="museum" class="museum-view" hidden></div>
+        <div id="libraryRoom" class="library-room" hidden>
+          <div class="room-wall"></div>
+          <div class="room-baseboard"></div>
+          <div class="room-floor"></div>
+          <div class="room-window">
+            <div class="window-glow"></div>
+            <div class="window-frame"><div class="window-pane"></div><div class="window-pane"></div><div class="window-pane"></div><div class="window-pane"></div></div>
+            <div class="window-light"></div>
+          </div>
+          <div class="room-lamp"><div class="lamp-glow"></div><div class="lamp-shade"></div><div class="lamp-pole"></div><div class="lamp-base"></div></div>
+          <div class="room-plant"><div class="plant-leaves"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="plant-pot"></div></div>
+          <div class="room-clock"><div class="clock-face"><span class="clock-hand hour"></span><span class="clock-hand minute"></span><span class="clock-center"></span></div></div>
+          <div class="bookcase-frame">
+            <div class="bookcase-crown"></div>
+            <div class="bookcase-body">
+              <div class="bookcase-column left"></div>
+              <div id="libraryWall" class="library-wall"></div>
+              <div class="bookcase-column right"></div>
+            </div>
+            <div class="bookcase-base"></div>
+            <div class="bookcase-shadow"></div>
+          </div>
+        </div>
+        <div id="booksGrid" class="books-grid" hidden></div>
+        <div class="tablewrap" id="tablewrap">
+          <table>
+            <thead><tr>
+              <th data-sort="title">عنوان<span class="arrow">▲▼</span></th>
+              <th data-sort="author">نویسنده<span class="arrow">▲▼</span></th>
+              <th data-sort="subject">موضوع<span class="arrow">▲▼</span></th>
+              <th data-sort="status">وضعیت<span class="arrow">▲▼</span></th>
+              <th data-sort="progress">پیشرفت<span class="arrow">▲▼</span></th>
+              <th data-sort="score">امتیاز<span class="arrow">▲▼</span></th>
+              <th data-sort="access">دسترسی<span class="arrow">▲▼</span></th>
+              <th>عملیات</th>
+            </tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="empty" hidden></div>
+      </section>
+
+      <!-- ============ TAB: READING ============ -->
+      <section class="tab-grid" data-tab="reading">
+        <section class="panel">
+          <div class="head"><h2>زنجیره مطالعه</h2><span style="color:var(--yellow)">🔥</span></div>
+          <div class="streak-card">
+            <div class="streak-fire">🔥</div>
+            <div style="flex:1">
+              <div class="streak-num" id="streakNum">۰</div>
+              <div class="streak-lbl">روز پیوسته مطالعه</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:18px;font-weight:700" id="bestStreak">۰</div>
+              <div class="streak-lbl">رکورد</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="head"><h2>تایمر مطالعه</h2><span style="color:var(--green)">⏱</span></div>
+          <div class="timer-card">
+            <div class="timer-book">
+              <label for="timerBook">کتاب این جلسه</label>
+              <select id="timerBook"></select>
+            </div>
+            <div class="timer-display" id="timerDisplay">۰۰:۰۰:۰۰</div>
+            <div class="timer-controls">
+              <button class="btn primary" id="timerToggle" type="button">▶ شروع</button>
+              <button class="btn" id="timerReset" type="button">↻ صفر</button>
+            </div>
+            <div class="muted" style="font-size:11px;text-align:center">پس از پایان، جلسه برای کتاب انتخاب‌شده ثبت می‌شود</div>
+          </div>
+        </section>
+
+        <section class="panel" id="readingPanel">
+          <div class="head"><h2>هدف مطالعه روزانه</h2><span class="muted">دقیقه</span></div>
+          <div class="setting-row"><label for="dailyGoal">هدف روزانه</label><input id="dailyGoal" type="number" min="5" max="600" step="5" value="30"></div>
+          <div class="goal-track"><i id="goalFill"></i></div>
+          <div class="goal-numbers"><span id="todayMinutes">۰ دقیقه امروز</span><b id="goalPercent">۰٪</b></div>
+          <div class="mini-stat"><div><span class="muted">مطالعه این هفته</span><strong id="weekMinutes">۰ دقیقه</strong></div><div><span class="muted">صفحات این هفته</span><strong id="weekPages">۰</strong></div></div>
+        </section>
+
+        <section class="panel"><div class="head"><h2>کتاب پیشنهادی</h2><button class="btn sm" id="aiNextBookBtn" type="button" title="پیشنهاد AI">🤖 AI</button></div>
+          <div class="recommend" id="reco"></div>
+          <div id="aiNextBookOut" class="ai-next-out"></div>
+        </section>
+
+        <section class="panel" id="sessionPanel">
+          <div class="head"><h2>ثبت جلسه مطالعه</h2><span style="color:var(--green)">◷</span></div>
+          <form id="sessionForm" class="reading-form">
+            <div class="wide"><label for="sessionBook">کتاب</label><select id="sessionBook" required></select></div>
+            <div><label for="sessionDate">تاریخ</label><input id="sessionDate" type="date" required></div>
+            <div><label for="sessionMinutes">مدت (دقیقه)</label><input id="sessionMinutes" type="number" min="1" max="1440" value="30" required></div>
+            <div><label for="sessionPages">صفحات خوانده‌شده</label><input id="sessionPages" type="number" min="0" max="10000" value="0"></div>
+            <div><label for="sessionFrom">از صفحه (اختیاری)</label><input id="sessionFrom" type="number" min="1" placeholder="مثلاً ۳۰"></div>
+            <div class="wide"><label for="sessionNotes">یادداشت جلسه (اختیاری)</label><textarea id="sessionNotes" rows="2" maxlength="500" placeholder="چه چیزی یاد گرفتی؟"></textarea></div>
+            <button class="btn primary wide" type="submit">＋ ثبت جلسه مطالعه</button>
+          </form>
+          <div class="head" style="margin-top:18px;margin-bottom:8px"><h2>جلسه‌های اخیر</h2><button class="btn sm" id="exportSessions" type="button">CSV</button></div>
+          <div id="sessionList" class="session-list"></div>
+        </section>
+
+        <section class="panel" id="reviewPanel">
+          <div class="head"><h2>مرور امروز</h2><span class="muted"><b id="reviewCount">۰</b> مورد</span></div>
+          <div id="reviewQueue"></div>
+        </section>
+      </section>
+
+      <!-- ============ TAB: QUOTES ============ -->
+      <section class="tab-grid" data-tab="quotes">
+        <section class="panel" id="quotesPanel" style="grid-column:1/-1">
+          <div class="head">
+            <h2>نقل‌قول و ایده</h2>
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="btn sm" id="aiTagAllBtn" type="button">🤖 برچسب AI</button>
+              <span class="muted">دفتر دانش</span>
+            </div>
+          </div>
+          <div id="aiTagOut" class="ai-tag-out"></div>
+          <form id="quoteForm" class="reading-form" style="margin-top:12px">
+            <div class="wide"><label for="quoteBook">کتاب</label><select id="quoteBook" required></select></div>
+            <div><label for="quotePage">صفحه</label><input id="quotePage" type="number" min="0" placeholder="اختیاری"></div>
+            <div><label for="quoteTags">برچسب‌ها <button type="button" class="btn sm" id="aiSuggestTags" style="margin-inline-start:6px;padding:2px 8px;min-height:auto;font-size:11px">🤖</button></label><input id="quoteTags" placeholder="با کاما جدا کن"></div>
+            <div class="wide"><label for="quoteText">متن نقل‌قول</label><textarea id="quoteText" rows="3" maxlength="2000" placeholder="جملات کلیدی…"></textarea></div>
+            <button class="btn primary wide" type="submit">＋ ثبت نقل‌قول</button>
+          </form>
+          <div class="head" style="margin-top:18px;margin-bottom:8px">
+            <h2>آرشیو</h2>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <select id="quoteFilterBook"></select>
+              <select id="quoteFilterTag"></select>
+              <button class="btn sm" id="exportQuotes" type="button">CSV</button>
+            </div>
+          </div>
+          <div id="quotesList" class="quotes-list"></div>
+        </section>
+      </section>
+
+      <!-- ============ TAB: STATS ============ -->
+      <section class="tab-grid" data-tab="stats">
+        <section class="panel" id="reportsPanel">
+          <div class="head">
+            <h2>گزارش مطالعه</h2>
+            <select id="reportRange" aria-label="بازه زمانی">
+              <option value="this-month">این ماه</option>
+              <option value="last-month">ماه قبل</option>
+              <option value="last-3">۳ ماه اخیر</option>
+              <option value="this-year">سال اخیر</option>
+              <option value="all">همه زمان‌ها</option>
+            </select>
+          </div>
+          <div id="reportsBody"></div>
+        </section>
+
+        <section class="panel"><div class="head"><h2>آمار شاخص‌ها</h2></div>
+          <ul class="stats">
+            <li>◷ <span>مجموع صفحات: <b id="pages">۰</b></span></li>
+            <li>✓ <span>صفحات خوانده‌شده: <b id="pagesread">۰</b></span></li>
+            <li>◉ <span>میانگین پیشرفت: <b id="avgprogress">۰٪</b></span></li>
+            <li>﷼ <span>مجموع هزینه: <b id="cost">۰ تومان</b></span></li>
+            <li>⚡ <span>سرعت مطالعه: <b id="speed">—</b></span></li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ============ TAB: SETTINGS ============ -->
+      <section class="tab-grid" data-tab="settings">
+        <section class="panel" id="settingsPanel">
+          <div class="head"><h2>تنظیمات نمایش</h2><span style="color:var(--yellow)">⚙</span></div>
+          <div class="setting-row"><label for="fontScale">اندازه نوشته</label><select id="fontScale"><option value="13">کوچک</option><option value="14" selected>معمولی</option><option value="15">بزرگ</option><option value="16">خیلی بزرگ</option></select></div>
+          <div class="setting-row"><label for="modeTheme">حالت نمایش</label><select id="modeTheme"><option value="dark">تاریک</option><option value="light">روشن</option><option value="system">مطابق سیستم</option></select></div>
+          <div class="setting-row"><label for="accentTheme">پالت رنگی</label><select id="accentTheme"><option value="ocean">اقیانوسی</option><option value="forest">جنگلی</option><option value="violet">بنفش سلطنتی</option><option value="sunset">غروب طلایی</option><option value="rose">رز و یاقوتی</option><option value="teal">فیروزه‌ای</option></select></div>
+          <div class="palette-swatches" id="paletteSwatches" aria-label="انتخاب سریع پالت">
+            <button type="button" class="palette-choice" data-palette="ocean"><i style="background:linear-gradient(135deg,#268fe5,#54c8ff)"></i><span>اقیانوسی</span></button>
+            <button type="button" class="palette-choice" data-palette="forest"><i style="background:linear-gradient(135deg,#18a879,#75e1b7)"></i><span>جنگلی</span></button>
+            <button type="button" class="palette-choice" data-palette="violet"><i style="background:linear-gradient(135deg,#8b5cf6,#c4a6ff)"></i><span>بنفش</span></button>
+            <button type="button" class="palette-choice" data-palette="sunset"><i style="background:linear-gradient(135deg,#d99019,#ffcf70)"></i><span>طلایی</span></button>
+            <button type="button" class="palette-choice" data-palette="rose"><i style="background:linear-gradient(135deg,#e34d86,#ffa5c5)"></i><span>رز</span></button>
+            <button type="button" class="palette-choice" data-palette="teal"><i style="background:linear-gradient(135deg,#0faaa8,#75eee0)"></i><span>فیروزه‌ای</span></button>
+          </div>
+          <div class="setting-row" style="grid-template-columns:1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="aiEnabled" style="width:auto;min-height:auto;margin:0">
+              <span>🤖 فعال‌سازی دستیار هوشمند</span>
+            </label>
+            <label for="aiApiKey">کلید AI API</label>
+            <div style="display:flex;gap:6px">
+              <input id="aiApiKey" type="password" placeholder="sk-or-…" autocomplete="off">
+              <button type="button" class="btn sm" id="aiTestBtn">تست</button>
+            </div>
+            <div id="aiStatus" style="font-size:11.5px;color:var(--muted)">⚠️ کلید وارد نشده</div>
+          </div>
+          <div class="quick" style="margin-top:14px">
+            <button class="btn" id="exportCsv" type="button">⇩ خروجی CSV کتاب‌ها</button>
+            <button class="btn" id="printPage" type="button">▧ چاپ / PDF</button>
+            <button class="btn" id="clearSessions" type="button">پاک‌کردن تاریخچه مطالعه</button>
+          </div>
+          <p class="muted" style="margin-bottom:0;font-size:11px">میانبر: <b>Ctrl+K</b> جست‌وجو · <b>N</b> کتاب جدید · <b>/</b> جست‌وجو · <b>T</b> تایمر · <b>Shift+A</b> آرشیو · <b>Esc</b> بستن</p>
+          <p class="muted" style="margin:6px 0 0;font-size:11px"><a href="test/run.html" target="_blank" style="color:var(--blue)">اجرای تست‌های خودکار →</a></p>
+        </section>
+
+        <section class="panel"><div class="head"><h2>دسترسی سریع</h2></div>
+          <div class="quick">
+            <button class="btn primary" id="add2" type="button">＋ افزودن کتاب</button>
+            <button class="btn" id="all" type="button">▤ همه کتاب‌ها</button>
+            <button class="btn" id="showqueue" type="button">☷ صف مطالعه</button>
+            <button class="btn" id="showhalf" type="button">◐ نیمه‌کاره</button>
+            <button class="btn" id="showFav" type="button">⭐ علاقه‌مندی‌ها</button>
+            <button class="btn" id="clear" type="button">↻ پاک فیلترها</button>
+          </div>
+        </section>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="modalbg" id="modalbg" role="dialog" aria-modal="true" aria-labelledby="modaltitle">
+  <form class="modal" id="form" novalidate>
+    <div class="head"><h2 id="modaltitle">افزودن کتاب</h2><button type="button" class="btn icon" id="close" aria-label="بستن">✕</button></div>
+    <input type="hidden" id="id">
+    <div id="dupWarning" style="display:none;background:#f6c74722;border:1px solid #f6c74755;border-radius:11px;padding:11px 14px;margin-bottom:12px;font-size:12.5px;color:var(--yellow)"></div>
+    <div class="formgrid">
+      <div class="field"><label for="title">عنوان کتاب <span class="req">*</span></label><input id="title" required maxlength="150" autocomplete="off"></div>
+      <div class="field"><label for="author">نویسنده</label><input id="author" maxlength="150" autocomplete="off"></div>
+      <div class="field"><label for="subject">موضوع</label><select id="subject"></select></div>
+      <div class="field"><label for="status">وضعیت خواندن</label>
+        <select id="status"><option>خوانده نشده</option><option>صف مطالعه</option><option>نیمه کاره</option><option>درحال خواندن</option><option>خوانده شده</option></select>
+      </div>
+      <div class="field"><label for="score">امتیاز</label><select id="score"></select></div>
+      <div class="field"><label for="access">دسترسی</label><input id="access" maxlength="10" list="accessList" placeholder="مثلاً 1.L" autocomplete="off"><datalist id="accessList"><option>1.L</option><option>2.H</option><option>9.NN</option></datalist></div>
+      <div class="field"><label for="pagesinput">کل صفحات</label><input id="pagesinput" type="text" inputmode="numeric" value="0"></div>
+      <div class="field"><label for="pagesdone">صفحات خوانده‌شده</label><input id="pagesdone" type="text" inputmode="numeric" value="0"></div>
+      <div class="field"><label for="price">هزینه آنلاین (تومان)</label><input id="price" type="text" inputmode="numeric" value="0"></div>
+      <div class="field"><label for="reread">دوباره می‌خوانم؟</label>
+        <select id="reread"><option>-</option><option>آره</option><option>نه</option></select>
+      </div>
+      <div class="field"><label for="series">مجموعه / سری</label><input id="series" maxlength="80" list="seriesList" placeholder="مثلاً: انسان ۲۵۰ ساله" autocomplete="off"><datalist id="seriesList"></datalist></div>
+      <div class="field"><label for="seriesOrder">جلد شماره</label><input id="seriesOrder" type="number" min="0" max="99" value="0"></div>
+      <div class="field" style="grid-column:1/-1"><label for="reason">دلیل مطالعه</label><input id="reason" maxlength="80" list="reasonList" autocomplete="off"><datalist id="reasonList">
+        <option>تغییر عادت</option><option>علاقه شخصی</option><option>پاسداشت</option><option>بسیج</option>
+        <option>استاد شجاعی</option><option>نویسنده</option><option>خارجی رمان</option><option>توسعه فردی خارجی</option>
+      </datalist></div>
+      <div class="field" style="grid-column:1/-1">
+        <label for="relatedSearch">کتاب‌های مرتبط</label>
+        <input id="relatedSearch" type="search" placeholder="جست‌وجو برای افزودن…" autocomplete="off">
+        <div id="relatedChips" class="related-chips"></div>
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>عکس جلد کتاب (اختیاری)</label>
+        <div class="cover-upload-row">
+          <div id="coverPreview" class="cover-preview" role="button" tabindex="0" aria-label="آپلود عکس جلد">
+            <span class="cover-preview-hint">📷<br>آپلود یا Drag کن</span>
+          </div>
+          <div class="cover-upload-actions">
+            <button type="button" class="btn sm" id="coverUpload">📁 انتخاب عکس</button>
+            <button type="button" class="btn sm" id="coverClear" hidden>✕ حذف</button>
+            <input type="file" id="coverInput" accept="image/*" hidden>
+            <div class="muted" style="font-size:10.5px;line-height:1.7;margin-top:4px">
+              JPG/PNG · خودکار فشرده می‌شود<br>
+              می‌توانی Ctrl+V هم بزنی
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field" style="grid-column:1/-1"><label for="notes">یادداشت</label><textarea id="notes" maxlength="2000"></textarea></div>
+    </div>
+    <div class="modalfoot">
+      <button type="button" class="btn" id="delete" style="display:none;background:#662b38;color:#ffdce0">🗑 حذف کتاب</button>
+      <div style="margin-inline-start:auto">
+        <button type="button" class="btn" id="cancel">انصراف</button>
+        <button class="btn primary" type="submit">ذخیره</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="book-page" id="bookPage" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="book-page-inner" id="bookPageBody"></div>
+</div>
+
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer-head"><h3 id="drawerTitle" style="margin:0;font-size:15px">جزئیات کتاب</h3><button class="btn sm" id="closeDrawer" type="button">✕</button></div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<div class="cmdk" id="cmdk" role="dialog" aria-modal="true">
+  <div class="cmdk-inner">
+    <input class="cmdk-input" id="cmdkInput" placeholder="جست‌وجوی کتاب یا فرمان…" autocomplete="off">
+    <div class="cmdk-list" id="cmdkList"></div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script defer src="seed-data.js"></script>
+<script defer src="js/config.js"></script>
+<script defer src="js/utils.js"></script>
+<script defer src="js/cover-store.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/charts.js"></script>
+<script defer src="js/books.js"></script>
+<script defer src="js/sessions.js"></script>
+<script defer src="js/timer.js"></script>
+<script defer src="js/theme.js"></script>
+<script defer src="js/render.js"></script>
+<script defer src="js/views.js"></script>
+<script defer src="js/shelf.js"></script>
+<script defer src="js/book-cover.js"></script>
+<script defer src="js/museum.js"></script>
+<script defer src="js/daily-quote.js"></script>
+<script defer src="js/gestures.js"></script>
+<script defer src="js/book-page.js"></script>
+<script defer src="js/ambient.js"></script>
+<script defer src="js/reports.js"></script>
+<script defer src="js/recommend.js"></script>
+<script defer src="js/ai-local.js"></script>
+<script defer src="js/ai-cloud.js"></script>
+<script defer src="js/ai-chat.js"></script>
+<script defer src="js/modals.js"></script>
+<script defer src="js/quotes.js"></script>
+<script defer src="js/backup.js"></script>
+<script defer src="js/pwa.js"></script>
+<script defer src="js/app.js"></script>
+</body>
+</html>

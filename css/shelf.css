@@ -1,0 +1,790 @@
+/* ============ LIBRARY SHELF ============ */
+.library-wall{
+  display:flex;flex-direction:column;
+  background:
+    radial-gradient(ellipse at top, #3a2415 0%, #20120a 60%, #120906 100%);
+  padding:26px 22px 34px;
+  border-radius:18px;
+  min-height:460px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    inset 0 0 100px #0009,
+    inset 0 2px 0 #ffffff08,
+    0 20px 60px #0008;
+  border:1px solid #00000055;
+}
+
+/* بافت چوب دیوار */
+.library-wall::before{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 46px,
+      #00000044 47px, transparent 49px),
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 3px,
+      #ffffff06 4px, transparent 6px);
+}
+
+.shelf-row{
+  position:relative;
+  display:flex;flex-direction:column;
+  margin-bottom:14px;
+}
+
+.shelf-books{
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+  min-height:210px;
+  padding:0 14px 2px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+  direction:rtl;
+  position:relative;
+  z-index:1;
+}
+
+/* تخته چوبی زیر کتاب‌ها */
+.shelf-board{
+  height:16px;
+  background:linear-gradient(180deg,
+    #6b4526 0%,
+    #4a2d18 25%,
+    #331d0e 70%,
+    #1a0e05 100%);
+  border-radius:3px 3px 4px 4px;
+  box-shadow:
+    0 3px 0 #0f0803,
+    0 6px 14px #0009,
+    0 12px 28px #0005,
+    inset 0 1px 0 #9b6a3d,
+    inset 0 -1px 0 #00000088;
+  position:relative;
+}
+
+.shelf-board::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:repeating-linear-gradient(90deg,
+    #ffffff08 0px, #ffffff08 3px,
+    transparent 3px, transparent 11px);
+  opacity:.5;pointer-events:none;
+}
+
+.shelf-board::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:8px;
+  background:radial-gradient(ellipse at center top, #00000077, transparent 70%);
+  pointer-events:none;
+}
+
+/* ===== کتاب روی قفسه ===== */
+.shelf-book{
+  position:relative;
+  width:var(--w, 36px);
+  min-width:var(--w, 36px);
+  height:var(--h, 170px);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--c, #2a4a7a) 65%, #000) 0%,
+    var(--c, #2a4a7a) 6%,
+    color-mix(in srgb, var(--c, #2a4a7a) 88%, #fff) 45%,
+    var(--c, #2a4a7a) 78%,
+    color-mix(in srgb, var(--c, #2a4a7a) 55%, #000) 100%);
+  border:0;
+  border-radius:2px 2px 4px 4px;
+  padding:0;
+  cursor:pointer;
+  flex:0 0 auto;
+  font-family:inherit;
+  color:#fff;
+  transform-origin:bottom center;
+  transition:transform .3s cubic-bezier(.34,1.3,.64,1), box-shadow .25s;
+  box-shadow:
+    inset -2px 0 5px #0007,
+    inset 2px 0 3px #ffffff22,
+    inset 0 1px 0 #ffffff18,
+    inset 0 -3px 4px #0009,
+    2px 2px 5px #0006,
+    3px 4px 8px #0004;
+  overflow:visible;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.shelf-book:hover,
+.shelf-book:focus-visible{
+  transform:translateY(-12px) scale(1.05) rotate(-1deg);
+  z-index:20;
+  box-shadow:
+    inset -2px 0 5px #0009,
+    inset 2px 0 3px #ffffff2e,
+    inset 0 1px 0 #ffffff2e,
+    inset 0 -3px 4px #000a,
+    5px 8px 16px #000a,
+    0 0 40px color-mix(in srgb, var(--c) 45%, transparent);
+  outline:none;
+}
+
+.shelf-book:focus-visible{
+  outline:2px solid #54c8ff;
+  outline-offset:4px;
+}
+
+.shelf-book:active{
+  transform:translateY(-6px) scale(1.02);
+}
+
+/* درخشش لبه بالای کتاب */
+.shelf-spine-top{
+  position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:linear-gradient(180deg, #ffffff40, #ffffff00);
+  border-radius:inherit;
+  pointer-events:none;
+}
+
+/* درخشش لبه پایین */
+.shelf-book::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:5px;
+  background:linear-gradient(0deg, #00000088, transparent);
+  border-radius:0 0 4px 4px;
+  pointer-events:none;
+}
+
+/* عنوان روی عطف */
+.shelf-title{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%, -50%) rotate(90deg);
+  transform-origin:center center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:160px;
+  font-size:10px;
+  font-weight:700;
+  color:#ffffff;
+  text-shadow:
+    0 1px 2px #000a,
+    0 0 8px #0006;
+  letter-spacing:.15px;
+  pointer-events:none;
+  padding:0 2px;
+}
+
+/* ستاره علاقه‌مندی */
+.shelf-fav{
+  position:absolute;
+  top:6px;left:50%;
+  transform:translateX(-50%);
+  font-size:9px;
+  color:#f6c747;
+  text-shadow:0 0 8px #f6c747cc, 0 1px 2px #000;
+  pointer-events:none;
+  animation:shelfFavGlow 2.5s ease-in-out infinite alternate;
+}
+@keyframes shelfFavGlow{
+  from{opacity:.75;filter:brightness(1)}
+  to{opacity:1;filter:brightness(1.4)}
+}
+
+/* نشانگر پیشرفت */
+.shelf-progress{
+  position:absolute;
+  bottom:4px;left:2px;right:2px;
+  background:linear-gradient(0deg,
+    color-mix(in srgb, var(--teal, #22d3c5) 65%, transparent),
+    transparent 90%);
+  border-radius:2px;
+  pointer-events:none;
+  transition:height .8s cubic-bezier(.4,0,.2,1);
+  opacity:.85;
+}
+
+/* حالت خالی */
+.shelf-empty{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:14px;
+  min-height:340px;
+  color:#a98464;
+  font-size:13px;
+  font-weight:500;
+  text-align:center;
+  padding:20px;
+}
+.shelf-empty-icon{
+  font-size:64px;
+  opacity:.45;
+  filter:drop-shadow(0 6px 20px #000a);
+  animation:shelfEmptyBob 3.5s ease-in-out infinite;
+}
+@keyframes shelfEmptyBob{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+/* ===== موبایل ===== */
+@media(max-width:700px){
+  .library-wall{
+    padding:16px 10px 22px;
+    border-radius:14px;
+    min-height:380px;
+  }
+  .shelf-books{
+    min-height:150px;
+    padding:0 8px 2px;
+    gap:1px;
+  }
+  .shelf-book{
+    --w:min(var(--w, 36px), 26px);
+  }
+  .shelf-title{
+    font-size:8.5px;
+    max-width:110px;
+  }
+  .shelf-board{height:12px}
+  .shelf-row{margin-bottom:10px}
+}
+
+@media(max-width:380px){
+  .shelf-title{font-size:7.5px;max-width:90px}
+  .shelf-books{min-height:130px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .shelf-book{transition:none}
+  .shelf-book:hover{transform:none}
+  .shelf-empty-icon{animation:none}
+  .shelf-fav{animation:none}
+}
+
+/* ============ عمق قفسه و نور ============ */
+
+/* لامپ گرم بالای قفسه */
+.library-wall::after{
+  content:'';
+  position:absolute;
+  top:-60px;left:50%;transform:translateX(-50%);
+  width:70%;height:280px;
+  background:radial-gradient(ellipse at top,
+    #ffe0a02e 0%,
+    #ffb06015 35%,
+    transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* سایه عمقی زیر کتاب‌ها */
+.shelf-books::before{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;height:60%;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    #0000001a 60%,
+    #00000055 100%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* خط نور روی لبه تخته */
+.shelf-books::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;left:14px;right:14px;height:2px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    #ffffff18 15%,
+    #ffffff33 50%,
+    #ffffff18 85%,
+    transparent 100%);
+  filter:blur(1px);
+  pointer-events:none;
+  z-index:2;
+}
+
+/* سایه پشت هر کتاب (مثل ایستادن روی قفسه واقعی) */
+.shelf-book{
+  filter:drop-shadow(2px 1px 2px #0007);
+}
+
+/* کتاب‌های خوانده‌شده — کمی تیره‌تر، مثل کتاب کهنه */
+.shelf-book.is-finished{
+  filter:drop-shadow(2px 1px 2px #0007) saturate(.72) brightness(.88);
+  opacity:.94;
+}
+.shelf-book.is-finished:hover,
+.shelf-book.is-finished:focus-visible{
+  filter:drop-shadow(5px 8px 16px #000a) saturate(1.05) brightness(1.05);
+  opacity:1;
+}
+
+/* نشانگر «تمام شد» روی عطف */
+.shelf-book.is-finished::before{
+  content:'';
+  position:absolute;
+  top:8px;left:50%;transform:translateX(-50%);
+  width:6px;height:6px;border-radius:50%;
+  background:#10bb80;
+  box-shadow:0 0 6px #10bb80cc, 0 0 0 1.5px #10bb8055;
+  pointer-events:none;
+  z-index:3;
+}
+
+/* کتاب کج — مثل کتابی که آخر سری ایستاده */
+.shelf-book.is-leaning{
+  transform:rotate(-8deg) translateY(-1px);
+  transform-origin:bottom right;
+  margin-right:-4px;
+}
+.shelf-book.is-leaning:hover,
+.shelf-book.is-leaning:focus-visible{
+  transform:rotate(-8deg) translateY(-14px) scale(1.05);
+}
+
+/* ============ انیمیشن برداشتن کتاب ============ */
+.shelf-book.lifting{
+  animation:shelfLift .55s cubic-bezier(.34,1.3,.64,1) forwards;
+  z-index:30;
+  pointer-events:none;
+}
+@keyframes shelfLift{
+  0%{
+    transform:translateY(0) rotate(0) scale(1);
+  }
+  45%{
+    transform:translateY(-32px) rotate(-4deg) scale(1.06);
+    filter:drop-shadow(6px 14px 28px #000a)
+           drop-shadow(0 0 40px color-mix(in srgb, var(--c) 55%, transparent))
+           brightness(1.1);
+  }
+  100%{
+    transform:translateY(-48px) rotate(0deg) scale(1.1);
+    filter:drop-shadow(8px 18px 36px #000a)
+           drop-shadow(0 0 70px color-mix(in srgb, var(--c) 75%, transparent))
+           brightness(1.15);
+  }
+}
+
+/* سایه کتاب در حال برداشتن — روی قفسه خالی می‌شود */
+.shelf-book.lifting::after{
+  animation:shelfLiftShadow .55s ease forwards;
+}
+@keyframes shelfLiftShadow{
+  0%{background:linear-gradient(0deg, #00000088, transparent)}
+  100%{background:linear-gradient(0deg, #00000011, transparent)}
+}
+
+/* ============ موبایل ============ */
+@media(max-width:700px){
+  .library-wall::after{height:180px}
+  .shelf-book.is-leaning{transform:rotate(-6deg) translateY(-1px)}
+  .shelf-book.is-leaning:hover{transform:rotate(-6deg) translateY(-10px) scale(1.03)}
+  .shelf-book.lifting{animation-duration:.45s}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .shelf-book.lifting{animation:none}
+  .shelf-book.is-leaning,
+  .shelf-book.is-leaning:hover{transform:none}
+}
+
+/* ============ بافت عطف ============ */
+
+/* هدبند بالا — نوار باریک رنگی */
+.shelf-spine-headband{
+  position:absolute;
+  top:4px;left:0;right:0;height:5px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--c) 40%, #fff) 0%,
+    color-mix(in srgb, var(--c) 60%, #000) 45%,
+    color-mix(in srgb, var(--c) 80%, #000) 100%);
+  border-top:1px solid #ffffff55;
+  border-bottom:1px solid #00000077;
+  box-shadow:0 1px 0 #ffffff22;
+  pointer-events:none;
+}
+
+/* نوار میانی — خط تزئینی */
+.shelf-spine-band{
+  position:absolute;
+  top:calc(50% + 34px);left:2px;right:2px;height:3px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    #ffffff33 15%,
+    #ffffff55 50%,
+    #ffffff33 85%,
+    transparent 100%);
+  border-top:1px solid #00000055;
+  border-bottom:1px solid #ffffff11;
+  pointer-events:none;
+}
+
+/* تیل‌بند پایین — نوار رنگی */
+.shelf-spine-tailband{
+  position:absolute;
+  bottom:12px;left:0;right:0;height:4px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--c) 70%, #000) 0%,
+    color-mix(in srgb, var(--c) 45%, #fff) 45%,
+    color-mix(in srgb, var(--c) 65%, #000) 100%);
+  border-top:1px solid #00000077;
+  border-bottom:1px solid #ffffff33;
+  box-shadow:0 1px 0 #00000044;
+  pointer-events:none;
+}
+
+/* بهبود فونت عنوان روی عطف */
+.shelf-title{
+  font-size:10px;
+  letter-spacing:.3px;
+  font-weight:700;
+  color:#ffffff;
+  text-shadow:
+    0 1px 0 #000000aa,
+    0 0 4px #00000088,
+    0 0 12px #00000055;
+  max-width:130px;
+}
+
+@media(max-width:700px){
+  .shelf-spine-headband{height:3px;top:3px}
+  .shelf-spine-band{height:2px;top:calc(50% + 24px)}
+  .shelf-spine-tailband{height:3px;bottom:8px}
+  .shelf-title{font-size:8.5px;max-width:100px}
+}
+
+/* ============ پلاک موضوع زیر قفسه ============ */
+.shelf-plaque{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:10px auto 0;
+  padding:5px 16px;
+  background:linear-gradient(180deg,
+    #4a2f18 0%,
+    #2e1a0b 55%,
+    #1a0e05 100%);
+  border:1px solid #000000cc;
+  border-radius:4px;
+  box-shadow:
+    inset 0 1px 0 #ffffff2a,
+    inset 0 -1px 0 #00000088,
+    0 3px 8px #00000088,
+    0 6px 16px #00000055;
+  font-size:10.5px;
+  letter-spacing:.7px;
+  color:#d9b78a;
+  text-shadow:0 1px 2px #000;
+  position:relative;
+  align-self:center;
+}
+
+/* پیچ‌های دو طرف پلاک */
+.shelf-plaque::before,
+.shelf-plaque::after{
+  content:'';
+  position:absolute;
+  top:50%;transform:translateY(-50%);
+  width:5px;height:5px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,
+    #c9a870 0%, #6b4520 45%, #2a1808 100%);
+  box-shadow:
+    inset 0 1px 0 #000000aa,
+    0 1px 1px #ffffff11;
+}
+.shelf-plaque::before{left:5px}
+.shelf-plaque::after{right:5px}
+
+.shelf-plaque-subject{
+  color:#e8c895;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.shelf-plaque-count{
+  color:#a98464;
+  font-size:10px;
+  border-right:1px solid #00000066;
+  padding-right:8px;
+  margin-right:2px;
+}
+
+/* ============ کتاب خوابیده ============ */
+.shelf-lying-row{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  padding:0 14px 4px;
+  min-height:32px;
+  direction:rtl;
+  position:relative;
+  z-index:1;
+}
+
+.shelf-book-lying{
+  position:relative;
+  width:var(--w, 120px);
+  height:24px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--c) 65%, #000) 0%,
+    var(--c) 22%,
+    color-mix(in srgb, var(--c) 88%, #fff) 45%,
+    var(--c) 78%,
+    color-mix(in srgb, var(--c) 55%, #000) 100%);
+  border:0;
+  border-radius:2px 2px 3px 3px;
+  color:#fff;
+  padding:0 14px;
+  cursor:pointer;
+  font-family:inherit;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform-origin:center center;
+  transition:transform .3s cubic-bezier(.34,1.3,.64,1),
+             box-shadow .25s,
+             filter .25s;
+  box-shadow:
+    inset 0 1px 0 #ffffff44,
+    inset 0 -3px 4px #000000aa,
+    inset 2px 0 3px #ffffff1a,
+    inset -2px 0 3px #00000066,
+    2px 3px 5px #00000055,
+    3px 5px 10px #00000044;
+  overflow:visible;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.shelf-book-lying:hover,
+.shelf-book-lying:focus-visible{
+  transform:translateY(-6px) scale(1.03);
+  filter:drop-shadow(4px 6px 12px #000000aa)
+         drop-shadow(0 0 30px color-mix(in srgb, var(--c) 45%, transparent))
+         brightness(1.1);
+  outline:none;
+}
+
+.shelf-book-lying:focus-visible{
+  outline:2px solid #54c8ff;
+  outline-offset:3px;
+}
+
+.shelf-book-lying.is-finished{
+  filter:saturate(.7) brightness(.85);
+}
+
+.shelf-book-lying.is-finished:hover{
+  filter:saturate(1) brightness(1.05)
+         drop-shadow(0 0 30px color-mix(in srgb, var(--c) 45%, transparent));
+}
+
+/* نوار روی کتاب خوابیده */
+.shelf-lying-band{
+  position:absolute;
+  top:3px;left:3px;right:3px;height:2px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    #ffffff44 15%,
+    #ffffff66 50%,
+    #ffffff44 85%,
+    transparent 100%);
+  border-radius:1px;
+  pointer-events:none;
+}
+
+/* عنوان روی کتاب خوابیده */
+.shelf-lying-title{
+  font-size:10px;
+  font-weight:700;
+  color:#fff;
+  text-shadow:
+    0 1px 2px #000000cc,
+    0 0 8px #00000088;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+  letter-spacing:.3px;
+  pointer-events:none;
+}
+
+/* ستاره علاقه‌مندی روی کتاب خوابیده */
+.shelf-lying-fav{
+  position:absolute;
+  left:6px;top:50%;
+  transform:translateY(-50%);
+  font-size:9px;
+  color:#f6c747;
+  text-shadow:0 0 8px #f6c747cc, 0 1px 2px #000;
+  pointer-events:none;
+}
+
+/* انیمیشن برداشتن برای کتاب خوابیده */
+.shelf-book-lying.lifting{
+  animation:shelfLiftLying .55s cubic-bezier(.34,1.3,.64,1) forwards;
+  z-index:30;
+  pointer-events:none;
+}
+@keyframes shelfLiftLying{
+  0%{transform:translateY(0) rotate(0) scale(1)}
+  45%{
+    transform:translateY(-14px) rotate(-3deg) scale(1.06);
+    filter:drop-shadow(0 8px 20px #000000aa)
+           drop-shadow(0 0 30px color-mix(in srgb, var(--c) 55%, transparent))
+           brightness(1.15);
+  }
+  100%{
+    transform:translateY(-26px) rotate(-2deg) scale(1.1);
+    filter:drop-shadow(0 12px 28px #000000aa)
+           drop-shadow(0 0 60px color-mix(in srgb, var(--c) 75%, transparent))
+           brightness(1.2);
+  }
+}
+
+/* فاصله بیشتر بین ردیف‌ها به‌خاطر پلاک */
+.shelf-row{
+  margin-bottom:18px;
+}
+.shelf-row:has(.shelf-plaque){
+  margin-bottom:22px;
+}
+
+/* موبایل */
+@media(max-width:700px){
+  .shelf-lying-row{padding:0 8px 3px;min-height:26px}
+  .shelf-book-lying{height:20px;padding:0 10px}
+  .shelf-lying-title{font-size:9px}
+  .shelf-plaque{font-size:9.5px;padding:4px 12px;margin-top:8px}
+  .shelf-plaque-count{font-size:9px}
+  .shelf-row{margin-bottom:14px}
+  .shelf-row:has(.shelf-plaque){margin-bottom:18px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .shelf-book-lying.lifting{animation:none}
+}
+
+/* ============ پشته کتاب‌های خوابیده ============ */
+.shelf-stack{
+  position:relative;
+  display:flex;
+  flex-direction:column-reverse;
+  align-items:flex-start;
+  padding:0 14px 6px;
+  min-height:calc(24px + (var(--stack-count, 1) - 1) * 16px + 8px);
+  transition:min-height .25s;
+}
+
+.shelf-book-lying.stacked{
+  margin-top:-2px;
+  transform:translate(var(--ox, 0), var(--oy, 0));
+  transition:transform .25s cubic-bezier(.34,1.3,.64,1),
+             box-shadow .25s,
+             filter .25s;
+}
+
+/* وقتی روی پشته hover می‌کنی، کل پشته باز می‌شود */
+.shelf-stack:hover .shelf-book-lying.stacked{
+  transform:translate(var(--ox, 0), calc(var(--oy, 0px) - 12px));
+}
+
+/* شمارنده پشته */
+.shelf-stack-count{
+  position:absolute;
+  bottom:0;left:14px;
+  font-size:9.5px;
+  color:#a98464;
+  background:#1a0e05cc;
+  padding:2px 8px;
+  border-radius:6px;
+  border:1px solid #00000088;
+  letter-spacing:.3px;
+  pointer-events:none;
+  z-index:20;
+  box-shadow:0 2px 6px #00000088;
+}
+
+/* موبایل */
+@media(max-width:700px){
+  .shelf-book-lying.stacked{margin-top:-1px}
+  .shelf-stack-count{font-size:8.5px;padding:1px 6px;left:8px}
+  .shelf-stack{padding:0 8px 5px;min-height:calc(20px + (var(--stack-count, 1) - 1) * 12px + 6px)}
+}
+
+/* ============ Drag & Drop ============ */
+.shelf-book[draggable="true"]{
+  cursor:grab;
+}
+.shelf-book[draggable="true"]:active{
+  cursor:grabbing;
+}
+
+.shelf-book.dragging{
+  opacity:.35;
+  transform:scale(.95);
+  pointer-events:none;
+  filter:blur(1px);
+}
+
+.shelf-book.drop-before::before,
+.shelf-book.drop-after::after{
+  content:'';
+  position:absolute;
+  top:-8px;bottom:-8px;
+  width:4px;
+  background:linear-gradient(180deg,
+    var(--teal) 0%,
+    color-mix(in srgb,var(--teal) 60%,#fff) 50%,
+    var(--teal) 100%);
+  border-radius:3px;
+  box-shadow:
+    0 0 12px var(--teal),
+    0 0 24px color-mix(in srgb,var(--teal) 60%,transparent);
+  z-index:50;
+  pointer-events:none;
+  animation:dropPulse 1s ease-in-out infinite;
+}
+.shelf-book.drop-before::before{
+  left:-4px;
+}
+.shelf-book.drop-after::after{
+  right:-4px;
+}
+@keyframes dropPulse{
+  0%,100%{opacity:1;transform:scaleY(1)}
+  50%{opacity:.7;transform:scaleY(1.05)}
+}
+
+/* Ghost عنصر در حال drag */
+.drag-ghost{
+  position:fixed;
+  top:-9999px;left:-9999px;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:
+    0 20px 40px #000000cc,
+    0 0 60px #ffffff22,
+    inset 0 0 0 1px #ffffff22;
+  transform:rotate(-4deg);
+  border-radius:2px 2px 4px 4px;
+}
+.drag-ghost-title{
+  transform:rotate(90deg);
+  font-size:10px;
+  font-weight:700;
+  color:#fff;
+  text-shadow:0 1px 3px #000a;
+  white-space:nowrap;
+  max-width:140px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+@media(max-width:700px){
+  .shelf-book.drop-before::before,
+  .shelf-book.drop-after::after{width:3px;top:-6px;bottom:-6px}
+}

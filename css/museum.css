@@ -1,0 +1,214 @@
+/* ============ حالت موزه ============ */
+.museum-view{
+  padding:28px 24px 40px;
+  background:
+    radial-gradient(ellipse at top, #2a1a0d 0%, #1a0f05 60%, #0a0503 100%);
+  border-radius:18px;
+  min-height:480px;
+  box-shadow:
+    inset 0 0 120px #000000aa,
+    inset 0 2px 0 #ffffff08;
+  border:1px solid #00000066;
+}
+
+.museum-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:20px;
+  padding-bottom:20px;
+  border-bottom:1px solid #ffffff10;
+  margin-bottom:26px;
+  flex-wrap:wrap;
+}
+.museum-title{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.museum-icon{
+  font-size:44px;
+  filter:drop-shadow(0 4px 12px #ffd18033);
+}
+.museum-title h2{
+  font-size:20px;
+  margin:0 0 2px;
+  color:#e8c895;
+  font-weight:700;
+  letter-spacing:-.2px;
+}
+.museum-title h2::before{display:none}
+.museum-title .muted{font-size:12px;color:#a98464}
+.museum-stats{display:flex;gap:14px}
+.museum-stat{
+  text-align:center;
+  padding:8px 14px;
+  background:#00000044;
+  border:1px solid #ffffff10;
+  border-radius:10px;
+  min-width:80px;
+}
+.museum-stat span{font-size:10.5px;display:block;color:#a98464;margin-bottom:2px}
+.museum-stat b{font-size:19px;color:#ffd180;font-weight:800}
+
+.museum-display{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:26px 18px;
+}
+
+.museum-item{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  animation:museumIn .5s cubic-bezier(.34,1.3,.64,1) backwards;
+  outline:none;
+  transition:transform .3s cubic-bezier(.34,1.3,.64,1);
+}
+@keyframes museumIn{
+  from{opacity:0;transform:translateY(20px) scale(.94)}
+  to{opacity:1;transform:none}
+}
+.museum-item:hover{
+  transform:translateY(-6px);
+}
+.museum-item:focus-visible{
+  outline:2px solid #ffd180;
+  outline-offset:6px;
+  border-radius:14px;
+}
+
+.museum-pedestal{
+  position:relative;
+  width:100%;
+  aspect-ratio:2/3;
+  max-width:140px;
+  perspective:800px;
+}
+
+.museum-cover{
+  position:absolute;
+  inset:0;
+  border-radius:8px 12px 12px 8px;
+  background-size:cover;
+  background-position:center;
+  box-shadow:
+    0 0 0 1px #ffffff11 inset,
+    0 18px 40px #000000cc,
+    0 4px 12px #00000088,
+    0 0 60px #ffd18022;
+  overflow:hidden;
+  transform:rotateY(-4deg);
+  transition:transform .4s cubic-bezier(.34,1.3,.64,1), box-shadow .4s;
+}
+.museum-item:hover .museum-cover{
+  transform:rotateY(0deg) scale(1.03);
+  box-shadow:
+    0 0 0 1px #ffffff22 inset,
+    0 24px 50px #000000cc,
+    0 6px 16px #00000088,
+    0 0 80px #ffd18044;
+}
+.museum-cover-shine{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(120deg, transparent 40%, #ffffff11 50%, transparent 60%),
+    radial-gradient(circle at 20% 10%, #ffffff22 0%, transparent 40%);
+  pointer-events:none;
+}
+
+/* پایه موزه */
+.museum-pedestal::after{
+  content:'';
+  position:absolute;
+  bottom:-14px;left:10%;right:10%;height:14px;
+  background:linear-gradient(180deg,
+    #4a2f18 0%,
+    #2a1a0d 50%,
+    #0a0503 100%);
+  border-radius:50%;
+  filter:blur(4px);
+  opacity:.85;
+}
+
+.museum-info{
+  margin-top:22px;
+  text-align:center;
+  width:100%;
+}
+.museum-info h3{
+  font-size:12.5px;
+  font-weight:700;
+  margin:0 0 3px;
+  color:#e8c895;
+  line-height:1.4;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+.museum-info .muted{
+  font-size:10.5px;
+  color:#a98464;
+  margin:0 0 6px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.museum-stars{
+  color:#ffd180;
+  font-size:12px;
+  letter-spacing:1px;
+  margin-bottom:6px;
+  text-shadow:0 0 8px #ffd18055;
+}
+.museum-subject{
+  display:inline-block;
+  font-size:9.5px;
+  color:#c9a870;
+  background:#ffffff0d;
+  padding:2px 8px;
+  border-radius:5px;
+  border:1px solid #ffffff14;
+}
+
+.museum-empty{
+  text-align:center;
+  padding:80px 20px;
+  color:#a98464;
+}
+.museum-empty-icon{
+  font-size:72px;
+  opacity:.5;
+  margin-bottom:16px;
+  filter:drop-shadow(0 8px 24px #00000088);
+}
+.museum-empty-title{
+  font-size:16px;
+  font-weight:700;
+  color:#e8c895;
+  margin-bottom:6px;
+}
+.museum-empty-sub{
+  font-size:12.5px;
+  opacity:.75;
+}
+
+/* موبایل */
+@media(max-width:700px){
+  .museum-view{padding:18px 12px 30px;border-radius:14px}
+  .museum-title h2{font-size:16px}
+  .museum-icon{font-size:32px}
+  .museum-stats{gap:8px}
+  .museum-stat{padding:6px 10px;min-width:64px}
+  .museum-stat b{font-size:16px}
+  .museum-display{grid-template-columns:repeat(2,1fr);gap:20px 12px}
+  .museum-info h3{font-size:11.5px}
+  .museum-cover{transform:none}
+  .museum-item:hover .museum-cover{transform:scale(1.02)}
+  .museum-empty-icon{font-size:52px}
+}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>تست‌های کتابخانه</title>
+<style>
+  body{font-family:Tahoma,sans-serif;background:#06152b;color:#edf5ff;padding:24px;line-height:1.9}
+  h1{color:#54c8ff;font-size:20px}
+  .sum{background:#0b2345;border:1px solid #1b416b;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;gap:16px;font-weight:700}
+  .sum .pass{color:#10bb80}.sum .fail{color:#f45162}
+  .row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:8px 12px;border-bottom:1px solid #1b416b;font-size:13px}
+  .row.pass .st{color:#10bb80}
+  .row.fail{background:#f4516222}
+  .row.fail .st{color:#f45162}
+  .st{font-weight:700;font-size:12px}
+  .exp{color:#a9c0dd;font-size:11.5px;margin-top:2px}
+  .grp{margin-top:18px;font-size:12.5px;color:#54c8ff;font-weight:700;border-bottom:1px solid #54c8ff44;padding-bottom:4px}
+  code{background:#071a33;padding:1px 6px;border-radius:5px;font-size:11.5px;color:#ff9b38}
+</style>
+</head>
+<body>
+<h1>🧪 تست‌های خودکار — کتابخانه شخصی</h1>
+<div class="sum" id="sum">در حال اجرا…</div>
+<div id="out"></div>
+
+<script>
+// شبیه‌سازی حداقلی برای بارگذاری ماژول‌های خالص
+window.App = {};
+window.__SEED_BOOKS__ = [];
+</script>
+<script src="../js/config.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/store.js"></script>
+<script>
+(function(){
+  const out = document.getElementById('out');
+  const sum = document.getElementById('sum');
+  let pass = 0, fail = 0;
+
+  function group(name){
+    const g = document.createElement('div');
+    g.className = 'grp'; g.textContent = name;
+    out.appendChild(g);
+  }
+
+  function t(label, cond, expected){
+    const row = document.createElement('div');
+    row.className = 'row ' + (cond ? 'pass' : 'fail');
+    row.innerHTML = `<div>${label}${expected?`<div class="exp">انتظار: <code>${expected}</code></div>`:''}</div><div class="st">${cond?'✓':'✗'}</div>`;
+    out.appendChild(row);
+    cond ? pass++ : fail++;
+  }
+
+  const A = window.App;
+
+  group('utils — toEn / num');
+  t('toEn: ارقام فارسی → انگلیسی', A.toEn('۱۲۳') === '123', '123');
+  t('toEn: ارقام عربی → انگلیسی', A.toEn('٤٥٦') === '456', '456');
+  t('num: رشته با کاراکتر اضافه', A.num(' ۱٬۲۰۰ ') === 1200, '1200');
+  t('num: مقدار نامعتبر → پیش‌فرض', A.num('abc', 7) === 7, '7');
+  t('num: اعشار', A.num('12.5') === 12.5, '12.5');
+
+  group('utils — norm');
+  t('norm: ي → ی', A.norm('ي') === 'ی', 'ی');
+  t('norm: ك → ک', A.norm('ك') === 'ک', 'ک');
+  t('norm: حذف نیم‌فاصله', A.norm('می‌روم') === 'می روم', 'می روم');
+  t('norm: lowercase', A.norm('HELLO') === 'hello', 'hello');
+
+  group('utils — fmt / percent');
+  t('fmt: عدد صحیح فارسی', typeof A.fmt(1234) === 'string' && A.fmt(1234).length > 0);
+  t('percent: شامل علامت ٪', A.percent(50).includes('٪'));
+
+  group('utils — prog');
+  t('prog: پیشرفت نرمال', A.prog({pages:100, pagesdone:25}) === 25, '25');
+  t('prog: صفحات صفر', A.prog({pages:0, pagesdone:10}) === 0, '0');
+  t('prog: کلمپ ۱۰۰', A.prog({pages:100, pagesdone:150}) === 100, '100');
+  t('prog: کلمپ ۰', A.prog({pages:100, pagesdone:-5}) === 0, '0');
+
+  group('store — sanitizeBook');
+  const b1 = A.sanitizeBook({title:'  تست  ', pages:'۳۰۰', pagesdone:'۱۵۰'});
+  t('sanitize: title trim', b1?.title === 'تست', 'تست');
+  t('sanitize: pages → عدد', b1?.pages === 300, '300');
+  t('sanitize: pagesdone → عدد', b1?.pagesdone === 150, '150');
+  t('sanitize: عنوان خالی → null', A.sanitizeBook({title:''}) === null, 'null');
+  t('sanitize: input غیر آبجکت', A.sanitizeBook(null) === null, 'null');
+
+  const b2 = A.sanitizeBook({title:'x', status:'خوانده شده', pages:200, pagesdone:50});
+  t('sanitize: خوانده شده → pagesdone کامل', b2?.pagesdone === 200, '200');
+
+  const b3 = A.sanitizeBook({title:'x', pages:100, pagesdone:999});
+  t('sanitize: کلمپ pagesdone به صفحات', b3?.pagesdone === 100, '100');
+
+  const b4 = A.sanitizeBook({title:'x', score:'نامعتبر'});
+  t('sanitize: امتیاز نامعتبر → -', b4?.score === '-', '-');
+
+  group('store — seedRowToBook');
+  const sb = A.seedRowToBook([1,'عنوان','نویسنده','دینی','خوانده شده',0,'خوب',300,300,'دلیل','آره','1.L']);
+  t('seed: id', sb.id === '1');
+  t('seed: title', sb.title === 'عنوان');
+  t('seed: pages', sb.pages === 300);
+  t('seed: access', sb.access === '1.L');
+
+  group('config — پالت‌ها و ثابت‌ها');
+  t('SUBJECTS شامل دینی', A.SUBJECTS.includes('دینی'));
+  t('STATUSES شامل ۵ مورد', A.STATUSES.length === 5);
+  t('SCORE_VALUE بسیار تاثیر گذار = ۵', A.SCORE_VALUE['بسیار تاثیر گذار'] === 5);
+  t('PALETTES شامل ocean', !!A.PALETTES.ocean);
+  t('KEYS شامل BOOKS', !!A.KEYS.BOOKS);
+
+  group('utils — localDateKey');
+  const dk = A.localDateKey(new Date(2026, 0, 5));
+  t('localDateKey: قالب YYYY-MM-DD', /^\d{4}-\d{2}-\d{2}$/.test(dk), 'YYYY-MM-DD');
+  t('localDateKey: مقدار صحیح', dk === '2026-01-05', '2026-01-05');
+
+  const pct = Math.round(pass / (pass+fail) * 100);
+  sum.innerHTML = `<span>نتیجه:</span><span class="pass">✓ ${pass} موفق</span><span class="fail">✗ ${fail} ناموفق</span><span>(${pct}٪)</span>`;
+  document.title = fail ? `✗ ${fail} تست ناموفق` : `✓ همه ${pass} تست موفق`;
+})();
+</script>
+</body>
+</html>

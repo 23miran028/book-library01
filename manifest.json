@@ -1,0 +1,45 @@
+{
+  "name": "کتابخانه شخصی",
+  "short_name": "کتابخانه",
+  "description": "مدیریت کتاب‌ها و مسیر مطالعه",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06152b",
+  "theme_color": "#06152b",
+  "lang": "fa",
+  "dir": "rtl",
+  "categories": ["books", "productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%2306152b' width='192' height='192' rx='36'/%3E%3Ctext x='96' y='128' font-size='120' text-anchor='middle' fill='%2354c8ff'%3E%E2%96%A4%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%2306152b' width='512' height='512' rx='96'/%3E%3Ctext x='256' y='340' font-size='320' text-anchor='middle' fill='%2354c8ff'%3E%E2%96%A4%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "افزودن کتاب",
+      "short_name": "افزودن",
+      "url": "./index.html?action=add"
+    },
+    {
+      "name": "صف مطالعه",
+      "short_name": "صف",
+      "url": "./index.html?filter=queue"
+    },
+    {
+      "name": "تایمر مطالعه",
+      "short_name": "تایمر",
+      "url": "./index.html?action=timer"
+    }
+  ]
+}

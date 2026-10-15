@@ -1,0 +1,66 @@
+/* ============ RELATED & SERIES IN BOOK PAGE ============ */
+.bp-section{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.bp-section-title{
+  font-size:12.5px;
+  margin:0 0 12px;
+  color:var(--txt);
+  font-weight:700;
+}
+.bp-related-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:9px;
+}
+.bp-related-item{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding:8px;
+  background:var(--input-bg,#071a33);
+  border:1px solid var(--line);
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .18s;
+  text-align:right;
+  font-family:inherit;
+  color:inherit;
+}
+.bp-related-item:hover{
+  border-color:var(--blue);
+  background:color-mix(in srgb,var(--blue) 10%,var(--input-bg));
+  transform:translateY(-2px);
+}
+.bp-related-cover{
+  flex:0 0 auto;
+  width:32px;height:46px;
+  border-radius:5px;
+  background-size:cover;
+  background-position:center;
+  box-shadow:0 3px 8px #0005;
+}
+.bp-related-info{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.bp-related-info b{
+  font-size:11.5px;
+  line-height:1.4;
+  color:var(--txt);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.bp-related-info small{
+  font-size:10px;
+  color:var(--muted);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
